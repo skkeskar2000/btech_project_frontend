@@ -3,6 +3,7 @@ import 'package:flutter/material.dart' as ma;
 import 'package:major_project_fronted/constant/toast.dart';
 import 'package:major_project_fronted/constant/utils.dart';
 import 'package:major_project_fronted/services/form_services.dart';
+import 'package:major_project_fronted/view/ceo/user_list_widget.dart';
 
 class CeoHome extends StatefulWidget {
   const CeoHome({Key? key}) : super(key: key);
@@ -39,22 +40,20 @@ class _CeoHomeState extends State<CeoHome> {
         },
         items: [
           PaneItem(
-            icon: const Icon(FluentIcons.home),
-            title: const Text("Home"),
+            icon: const Icon(FluentIcons.profile_search),
+            title: const Text("Employee"),
             body: const ScaffoldPage(
-              header: Text(
-                "Sample Page 1",
-                style: TextStyle(fontSize: 60),
+              content: ma.Material(
+                child: UserListWidget(user: 'employee',),
               ),
             ),
           ),
           PaneItem(
-            icon: const Icon(FluentIcons.insert),
-            title: const Text("Insert"),
+            icon: const Icon(FluentIcons.profile_search),
+            title: const Text("Manager"),
             body: const ScaffoldPage(
-              header: Text(
-                "Sample Page 2",
-                style: TextStyle(fontSize: 60),
+              content: ma.Material(
+                child: UserListWidget(user: 'manager',),
               ),
             ),
           ),
@@ -150,21 +149,31 @@ class _CeoHomeState extends State<CeoHome> {
             ),
           )
         ],
-        footerItems: [
-          PaneItem(
-            icon: const Icon(FluentIcons.album_remove),
-            title: const Text("Logout"),
-            body: const ScaffoldPage(
-              header: Text(
-                "Sample Page 2",
-                style: TextStyle(fontSize: 60),
-              ),
+          footerItems: [
+            PaneItem(
+                icon: const Icon(FluentIcons.help),
+                title: const Text("Help"),
+                body: const ScaffoldPage(
+                  header: Text(
+                    "Help",
+                    style: TextStyle(fontSize: 60),
+                  ),
+                ),
             ),
-            onTap: (){
-              Navigator.pop(context);
-            }
-          ),
-        ]
+            PaneItem(
+                icon: const Icon(FluentIcons.album_remove),
+                title: const Text("Logout"),
+                body: const ScaffoldPage(
+                  header: Text(
+                    "Sample Page 2",
+                    style: TextStyle(fontSize: 60),
+                  ),
+                ),
+                onTap: (){
+                  Navigator.pop(context);
+                }
+            ),
+          ]
       ),
 
     );

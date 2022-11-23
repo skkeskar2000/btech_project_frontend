@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:major_project_fronted/api_const.dart';
 import 'package:major_project_fronted/constant/toast.dart';
+import 'package:major_project_fronted/model/user_model.dart';
 import 'package:major_project_fronted/preferences.dart';
 import 'package:major_project_fronted/services/service_const.dart';
 
@@ -33,6 +34,27 @@ class AuthServices {
     } catch (error) {
       print(error);
       return Tuple(status: true, msg: "error");
+    }
+  }
+
+  static Future<List<UserModel>>getUsers({required String userRole})async{
+    try{
+      Response response = await dio().get(
+        '${Apis.baseUrl}${Apis.getUsers}',
+        queryParameters: {'role':userRole},
+      );
+      if(response.data['status']){
+        List<UserModel>userList = [];
+        for(var i in response.data['data']){
+          userList.add(UserModel.fromJson(i));
+        }
+        return userList;
+      }else{
+        flutterToast(response.data['msg']);
+        return [];
+      }
+    }catch(error){
+      rethrow;
     }
   }
 }

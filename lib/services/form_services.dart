@@ -90,9 +90,21 @@ class FormServices {
     }
   }
 
-  static Future<Map<String, dynamic>> getForm() async {
+  static Future<Map<String, dynamic>> getForm({required String userId}) async {
     try {
-      String? userId = SharedPreferenceHelper.getString(Preferences.userid);
+      Response response = await dio().get(
+        '${Apis.baseUrl}${Apis.getForm}',
+        queryParameters: {'userId': userId, 'isDisplay': true},
+      );
+      return response.data;
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+
+  static Future<Map<String, dynamic>> getAllForm({required String userId}) async {
+    try {
       Response response = await dio().get(
         '${Apis.baseUrl}${Apis.getForm}',
         queryParameters: {'userId': userId, 'isDisplay': true},

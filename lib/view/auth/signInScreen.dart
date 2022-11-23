@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:major_project_fronted/constant/app_route.dart';
 import 'package:major_project_fronted/constant/toast.dart';
 import 'package:major_project_fronted/constant/utils.dart';
-import 'package:major_project_fronted/services/auth_services.dart';
+import 'package:major_project_fronted/services/user_list_widget';
 import 'package:major_project_fronted/services/service_const.dart';
 
 class SignInScreen extends StatelessWidget {
@@ -78,8 +78,11 @@ class SignInScreen extends StatelessWidget {
         if(response.msg == 'ceo'){
           Navigator.popAndPushNamed(context, AppConst.ceoHome);
         }
-        if(response.msg == "employee"){
+        else if(response.msg == "employee"){
           Navigator.popAndPushNamed(context, AppConst.employeeHome);
+        }
+        else {
+          Navigator.pushNamed(context, AppConst.managerHome);
         }
       }else{
         print('error');

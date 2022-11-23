@@ -1,29 +1,21 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as ma;
-import 'package:major_project_fronted/constant/utils.dart';
 import 'package:major_project_fronted/preferences.dart';
+import 'package:major_project_fronted/view/ceo/user_list_widget.dart';
 import 'package:major_project_fronted/view/employee/sidenav/dashboard.dart';
 import 'package:major_project_fronted/view/employee/sidenav/fillForm.dart';
 
-class EmployeeHome extends StatefulWidget {
-  const EmployeeHome({Key? key}) : super(key: key);
+class ManagerHome extends StatefulWidget {
+  const ManagerHome({Key? key}) : super(key: key);
 
   @override
-  State<EmployeeHome> createState() => _EmployeeHomeState();
+  State<ManagerHome> createState() => _ManagerHomeState();
 }
 
-class _EmployeeHomeState extends State<EmployeeHome> {
+class _ManagerHomeState extends State<ManagerHome> {
   int index = 0;
-  List<Widget> formList = [];
-  final formHeadingController = TextEditingController();
-  String userId = '';
 
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    formHeadingController.dispose();
-    super.dispose();
-  }
+  String userId ='';
 
   @override
   void initState() {
@@ -47,12 +39,20 @@ class _EmployeeHomeState extends State<EmployeeHome> {
           },
           items: [
             PaneItem(
-              icon: const Icon(FluentIcons.home),
-              title: const Text("Home"),
+              icon: const Icon(FluentIcons.profile_search),
+              title: const Text("Employee"),
               body: const ScaffoldPage(
-                header: Text(
-                  "Sample Page 1",
-                  style: TextStyle(fontSize: 60),
+                content: ma.Material(
+                  child: UserListWidget(user: 'employee',),
+                ),
+              ),
+            ),
+            PaneItem(
+              icon: const Icon(FluentIcons.profile_search),
+              title: const Text("Manager"),
+              body: const ScaffoldPage(
+                content: ma.Material(
+                  child: UserListWidget(user: 'manager',),
                 ),
               ),
             ),
@@ -63,9 +63,9 @@ class _EmployeeHomeState extends State<EmployeeHome> {
                 content: ma.Material(
                     child: userId.isNotEmpty
                         ? Dashboard(
-                            userId: userId,
-                          )
-                        : null),
+                      userId: userId,
+                    )
+                        : const Text('No Form Filled')),
               ),
             ),
             PaneItem(
@@ -87,8 +87,18 @@ class _EmployeeHomeState extends State<EmployeeHome> {
                     ),
                   ],
                 ),
-                content: ma.Material(
+                content: const ma.Material(
                   child: FillForm(),
+                ),
+              ),
+            ),
+            PaneItem(
+              icon: const Icon(FluentIcons.analytics_view),
+              title: const Text("Analysis"),
+              body: const ScaffoldPage(
+                header: Text(
+                  "Sample Page 1",
+                  style: TextStyle(fontSize: 60),
                 ),
               ),
             ),
@@ -147,37 +157,5 @@ class _EmployeeHomeState extends State<EmployeeHome> {
         ],
       ),
     );
-  }
-
-  void _openDialog() {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return ContentDialog(
-            title: Text('Enter the heading'),
-            content: TextBox(
-              controller: formHeadingController,
-            ),
-            actions: [
-              Button(
-                autofocus: true,
-                onPressed: () {
-                  setState(() {
-                    formList.add(
-                      _formWidget(heading: formHeadingController.text),
-                    );
-                  });
-                  formHeadingController.clear();
-                  Navigator.pop(context);
-                },
-                child: const Text('Add'),
-              ),
-              Button(
-                child: Text('Cancel'),
-                onPressed: () => Navigator.pop(context),
-              ),
-            ],
-          );
-        });
   }
 }

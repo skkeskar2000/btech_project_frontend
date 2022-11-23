@@ -25,7 +25,7 @@ class _FillFormState extends State<FillForm> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> items = ['1', '2', '3', '4', '5'];
+    List<String> items = ['1', '2', '3', '4', '5','6','7','8','9','10'];
     Map<String, dynamic> formData = {};
     return Material(
       child: FutureBuilder<Tuple>(
@@ -43,65 +43,73 @@ class _FillFormState extends State<FillForm> {
                       ),
                       )
                   : Center(
-                    child: SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.35,
-                        child: FutureBuilder<List<Map<String, dynamic>>>(
-                          future: FormServices.getFormAttribute(),
-                          builder: (context, snapshots) {
-                            if (ConnectionState.done ==
-                                snapshots.connectionState) {
-                              if (snapshots.hasData) {
-                                int length = snapshots.data!.length;
-                                return Column(
-                                  children: [
-                                    ListView.builder(
-                                        itemCount: length,
-                                        shrinkWrap: true,
-                                        itemBuilder: (context, index) {
-                                          String heading = "";
-                                          String value = "";
-                                          snapshots.data![index].forEach((k, v) {
-                                            heading = k;
-                                            value = v.toString();
-                                          });
-                                          return index > 0 && index < length - 1
-                                              ? DropDownButtonWidget(
-                                                  items: items,
-                                                  onChanged: (value) {
-                                                    formData[heading] = value;
-                                                  },
-                                                  questionTitle: heading)
-                                              : Container();
-                                        }),
-                                    const SizedBox(
-                                      height: 20,
-                                    ),
-                                    ElevatedButton(
-                                      onPressed: () async {
-                                        if (await FormServices.saveForm(
-                                            formData)) {
-                                          flutterToast('Successfully Submitted');
-                                          setState(() {
-                                            isFilled = true;
-                                            checkFormFilled = FormServices.checkFormFilled();
-                                          });
-                                        } else {
-                                          flutterToast('Unable to Submitted');
-                                        }
-                                      },
-                                      child: const Text('Submit'),
-                                    ),
-                                  ],
-                                );
+                    child: SingleChildScrollView(
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width*0.9,
+                          child: FutureBuilder<List<Map<String, dynamic>>>(
+                            initialData: const [{'false': "getting data"}],
+                            future: FormServices.getFormAttribute(),
+                            builder: (context, snapshots) {
+                              if (ConnectionState.done ==
+                                  snapshots.connectionState) {
+                                if (snapshots.hasData) {
+                                  int length = snapshots.data!.length;
+                                  return Column(
+                                    children: [
+                                      Container(
+                                        width: MediaQuery.of(context).size.width * 0.35,
+                                      child: ListView.builder(
+                                            itemCount: length,
+                                            shrinkWrap: true,
+                                            physics: NeverScrollableScrollPhysics(),
+                                            itemBuilder: (context, index) {
+                                              String heading = "";
+                                              String value = "";
+                                              snapshots.data![index].forEach((k, v) {
+                                                heading = k;
+                                                value = v.toString();
+                                              });
+                                              return index > 0 && index < length - 1
+                                                  ? DropDownButtonWidget(
+                                                      items: items,
+                                                      onChanged: (value) {
+                                                        formData[heading] = value;
+                                                      },
+                                                      questionTitle: heading)
+                                                  : Container();
+                                            }),
+                                      ),
+                                      const SizedBox(
+                                        height: 20,
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () async {
+                                          if (await FormServices.saveForm(
+                                              formData)) {
+                                            flutterToast('Successfully Submitted');
+                                            setState(() {
+                                              isFilled = true;
+                                              checkFormFilled = FormServices.checkFormFilled();
+                                            });
+                                          } else {
+                                            flutterToast('Unable to Submitted');
+                                          }
+                                        },
+                                        child: const Text('Submit'),
+                                      ),
+                                      const SizedBox(height: 50,),
+                                    ],
+                                  );
+                                } else {
+                                  return const Text("Unable to get Form");
+                                }
                               } else {
-                                return const Text("Unable to get Form");
+                                return const CircularProgressIndicator();
                               }
-                            } else {
-                              return const CircularProgressIndicator();
-                            }
-                          },
+                            },
+                          ),
                         ),
-                      ),
+                    ),
                   );
             } else {
               return CircularProgressIndicator();

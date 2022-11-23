@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:major_project_fronted/view/widget/bar_chart_widget.dart';
+import 'package:major_project_fronted/view/widget/pie_chart_widget.dart';
 
 class DashboardWidget extends StatefulWidget {
   const DashboardWidget(
@@ -14,7 +15,7 @@ class DashboardWidget extends StatefulWidget {
 class _DashboardWidgetState extends State<DashboardWidget> {
   Map<String,dynamic> score = {};
   String userName = '';
-  String total = '';
+  int total = 0;
   @override
   void initState() {
     widget.formData.forEach((key, value) {
@@ -23,7 +24,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
       }else if(key == 'userName'){
         userName = value;
       }else if(key == 'total'){
-        total = value;
+        total = int.parse(value);
       }
       else{
         score[key] = value;
@@ -33,7 +34,6 @@ class _DashboardWidgetState extends State<DashboardWidget> {
   }
   @override
   Widget build(BuildContext context) {
-    print(score);
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -100,7 +100,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                     MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(entry.key),
-                                      Text(entry.value),
+                                      Text((int.parse(entry.value)*10).toString()),
                                     ],
                                   ),
                                 );
@@ -125,7 +125,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                   ),
                                 ),
                                 Text(
-                                  total,
+                                  ((total/(score.length*10))*100).toString(),
                                   style: const TextStyle(
                                     fontSize: 25,
                                     fontWeight: FontWeight.w700,
@@ -150,7 +150,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                             border: Border.all(width: 1,color: Colors.black12),
                           ),
                           child: BarChartWidget(
-                            // formData: state.formData,
+                            scoreData: score,
                           ),
                         ),
                         Container(
@@ -159,9 +159,9 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                           decoration: BoxDecoration(
                             border: Border.all(width: 1,color: Colors.black12),
                           ),
-                          // child: PieChartWidget(
-                          //   // formEntity: state.formData,
-                          // ),
+                          child: PieChartWidget(
+                            formData: score,
+                          ),
                         )
                       ],
                     )),

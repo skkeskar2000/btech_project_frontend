@@ -5,6 +5,7 @@ import 'package:major_project_fronted/view/auth/signInScreen.dart';
 import 'package:major_project_fronted/view/auth/welcomScreen.dart';
 import 'package:major_project_fronted/view/ceo/ceo_home.dart';
 import 'package:major_project_fronted/view/employee/employee_home.dart';
+import 'package:major_project_fronted/view/manager/manager.dart';
 
 class AppConst {
   static const String welcomeScreen = "welcomeScreen";
@@ -21,19 +22,22 @@ class AppRoute {
     switch (settings.name) {
       case AppConst.welcomeScreen:
         {
-          return CupertinoPageRoute(
+          return FluentPageRoute(
               builder: (context) => const WelcomeScreen());
         }
       case AppConst.signInScreen:
         {
-          return CupertinoPageRoute(builder: (context) => const SignInScreen());
+          return FluentPageRoute(builder: (context) => const SignInScreen());
         }
       case AppConst.ceoHome:
-        return CupertinoPageRoute(builder: (context)=>const CeoHome());
+        return FluentPageRoute(builder: (context)=>const CeoHome());
 
       case AppConst.employeeHome:
         return FluentPageRoute(builder: (context)=> const EmployeeHome());
-      default:
+
+      case AppConst.managerHome:
+        return FluentPageRoute(builder: (context)=> const ManagerHome());
+        default:
         return CupertinoPageRoute(builder: (context) => ErrorPage());
     }
   }

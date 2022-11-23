@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:major_project/constant/constant.dart';
+import 'package:major_project_fronted/constant/utils.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-import '../model/form_entity.dart';
 
 class PieChartWidget extends StatefulWidget {
-  const PieChartWidget({Key? key, required this.formEntity}) : super(key: key);
-  final FormEntity formEntity;
-
+  const PieChartWidget({Key? key, required this.formData,}) : super(key: key);
+  final Map<String,dynamic> formData;
   @override
   State<PieChartWidget> createState() => _PieChartWidgetState();
 }
@@ -26,20 +24,16 @@ class _PieChartWidgetState extends State<PieChartWidget> {
   Widget build(BuildContext context) {
     late TooltipBehavior _tooltip;
 
-    num data = widget.formEntity.projects +
-        widget.formEntity.communicationSkill +
-        widget.formEntity.leadership +
-        widget.formEntity.creativity +
-        widget.formEntity.achievements +
-        widget.formEntity.jobKnowledge +
-        widget.formEntity.problemSolvingAbility +
-        widget.formEntity.productivity;
-
-    var average = data / 8;
-
+    num data = 0;
+    widget.formData.forEach((key, value) {
+      data+= int.parse(value);
+    });
+    var average = data / widget.formData.length;
+    print(data);
+    print(average);
     final List<ChartData> chartData = [
-      ChartData('Need Progress', 5 - average, Colors.red),
-      ChartData('Your Average', average, Colors.blue),
+      ChartData('Need Progress', (10 - average)*10, Colors.red),
+      ChartData('Your Average', average*10, Colors.blue),
     ];
     return SfCircularChart(
         title: ChartTitle(
@@ -48,7 +42,7 @@ class _PieChartWidgetState extends State<PieChartWidget> {
             // Aligns the chart title to left
             alignment: ChartAlignment.center,
             textStyle: TextStyle(
-              color: kPrimaryTextColour,
+              color: headingTextColor,
               fontFamily: 'Roboto',
               fontSize: 14,
             )
