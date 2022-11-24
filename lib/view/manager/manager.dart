@@ -1,9 +1,11 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as ma;
+import 'package:major_project_fronted/constant/utils.dart';
 import 'package:major_project_fronted/preferences.dart';
 import 'package:major_project_fronted/view/ceo/user_list_widget.dart';
 import 'package:major_project_fronted/view/employee/sidenav/dashboard.dart';
 import 'package:major_project_fronted/view/employee/sidenav/fillForm.dart';
+import 'package:major_project_fronted/view/manager/sidenav/analysis.dart';
 
 class ManagerHome extends StatefulWidget {
   const ManagerHome({Key? key}) : super(key: key);
@@ -95,10 +97,15 @@ class _ManagerHomeState extends State<ManagerHome> {
             PaneItem(
               icon: const Icon(FluentIcons.analytics_view),
               title: const Text("Analysis"),
-              body: const ScaffoldPage(
-                header: Text(
-                  "Sample Page 1",
-                  style: TextStyle(fontSize: 60),
+              body: ScaffoldPage(
+                header: Center(
+                  child: Text(
+                    'Analysis',
+                    style: TextStyle(fontSize: 40,color: headingTextColor),
+                  ),
+                ),
+                content: ma.Material(
+                  child: Analysis(),
                 ),
               ),
             ),

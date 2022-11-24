@@ -103,12 +103,10 @@ class FormServices {
   }
 
 
-  static Future<Map<String, dynamic>> getAllForm({required String userId}) async {
+  static Future<Map<String, dynamic>> getAllForm({required String role}) async {
     try {
       Response response = await dio().get(
-        '${Apis.baseUrl}${Apis.getForm}',
-        queryParameters: {'userId': userId, 'isDisplay': true},
-      );
+        '${Apis.baseUrl}${Apis.getAllForm}',queryParameters: {'role':role});
       return response.data;
     } catch (error) {
       rethrow;
