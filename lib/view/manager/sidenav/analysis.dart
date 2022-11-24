@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:major_project_fronted/constant/toast.dart';
 import 'package:major_project_fronted/services/form_services.dart';
+import 'package:major_project_fronted/services/service_const.dart';
 
 class Analysis extends StatefulWidget {
   const Analysis({Key? key}) : super(key: key);
@@ -9,7 +11,7 @@ class Analysis extends StatefulWidget {
 }
 
 class _AnalysisState extends State<Analysis> {
-  final Future<Map<String, dynamic>> _getAllForm =
+  Future<Map<String, dynamic>> _getAllForm =
       FormServices.getAllForm(role: 'employee');
 
   @override
@@ -27,7 +29,9 @@ class _AnalysisState extends State<Analysis> {
                 return SingleChildScrollView(
                   child: Column(
                     children: [
-                      SizedBox(height: 10,),
+                      const SizedBox(
+                        height: 10,
+                      ),
                       Row(
                         children: const [
                           Expanded(
@@ -44,33 +48,39 @@ class _AnalysisState extends State<Analysis> {
                             flex: 3,
                             child: Text(
                               'ID',
-                              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                  fontSize: 22, fontWeight: FontWeight.bold),
                             ),
                           ),
                           Expanded(
                             flex: 3,
                             child: Text(
                               'Name',
-                              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                  fontSize: 22, fontWeight: FontWeight.bold),
                             ),
                           ),
                           Expanded(
                             flex: 2,
                             child: Text(
                               'Status',
-                              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                  fontSize: 22, fontWeight: FontWeight.bold),
                             ),
                           ),
                           Expanded(
                             flex: 1,
                             child: Text(
                               'Update',
-                              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                  fontSize: 22, fontWeight: FontWeight.bold),
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(height: 10,),
+                      const SizedBox(
+                        height: 10,
+                      ),
                       const Divider(
                         color: Colors.black12,
                       ),
@@ -78,10 +88,7 @@ class _AnalysisState extends State<Analysis> {
                         itemCount: _formList.length,
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, index) => AnalysisCardWidget(
-                          formData: _formList[index],
-                          index: (index+1).toString(),
-                        ),
+                        itemBuilder: (context, index) =>_cardWidget(_formList[index], (index+1).toString())
                       ),
                     ],
                   ),
@@ -99,46 +106,31 @@ class _AnalysisState extends State<Analysis> {
           }
         });
   }
-}
+  Widget _cardWidget(Map<dynamic, dynamic> formData,String index){
+    String userName = '';
+    int total = 0;
+    String formId = '';
+    bool isVerified = false;
+    Map<String, dynamic> score = {};
 
-class AnalysisCardWidget extends StatefulWidget {
-  const AnalysisCardWidget({Key? key, required this.formData, required this.index})
-      : super(key: key);
-  final Map<dynamic, dynamic> formData;
-  final String index;
-  @override
-  State<AnalysisCardWidget> createState() => _AnalysisCardWidgetState();
-}
-
-class _AnalysisCardWidgetState extends State<AnalysisCardWidget> {
-  String userName = '';
-  int total = 0;
-  String formId = '';
-  bool isVerified = false;
-  Map<String,dynamic>score = {};
-  @override
-  void initState() {
-    widget.formData.forEach((key, value) {
-      if(key == 'createdAt' || key == 'updatedAt' || key=='__v' || key == 'role' || key=='userId'){
-
-      }else if(key == 'userName'){
-        userName = value;
-      }else if(key == 'total'){
-        total = int.parse(value);
-      }else if(key=='_id'){
-        formId = value;
-      }
-      else if(key == 'isVerified'){
-        isVerified = value;
-      }
-      else{
-        score[key] = value;
-      }
-    });
-    super.initState();
-  }
-  @override
-  Widget build(BuildContext context) {
+    formData.forEach((key, value) {
+        if (key == 'createdAt' ||
+            key == 'updatedAt' ||
+            key == '__v' ||
+            key == 'role' ||
+            key == 'userId') {
+        } else if (key == 'userName') {
+          userName = value;
+        } else if (key == 'total') {
+          total = int.parse(value);
+        } else if (key == '_id') {
+          formId = value;
+        } else if (key == 'isVerified') {
+          isVerified =  value=='true';
+        } else {
+          score[key] = value;
+        }
+      });
     return Container(
       padding: const EdgeInsets.all(5),
       child: Column(
@@ -148,7 +140,7 @@ class _AnalysisCardWidgetState extends State<AnalysisCardWidget> {
               Expanded(
                 flex: 1,
                 child: Text(
-                  widget.index,
+                  index,
                   style: const TextStyle(
                     fontSize: 18,
                   ),
@@ -176,15 +168,13 @@ class _AnalysisCardWidgetState extends State<AnalysisCardWidget> {
                 flex: 2,
                 child: isVerified
                     ? const Text(
-                  'Verified',
-                  style: TextStyle(
-                      fontSize: 18, color: Colors.green),
-                )
+                        'Verified',
+                        style: TextStyle(fontSize: 18, color: Colors.green),
+                      )
                     : const Text(
-                  'Pending',
-                  style:
-                  TextStyle(fontSize: 18, color: Colors.red),
-                ),
+                        'Pending',
+                        style: TextStyle(fontSize: 18, color: Colors.red),
+                      ),
               ),
               Expanded(
                 flex: 1,
@@ -197,6 +187,16 @@ class _AnalysisCardWidgetState extends State<AnalysisCardWidget> {
                         ),
                       );
                     } else {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) =>
+                            _buildPopupDialog(formId, score),
+                      ).then((value) {
+                        print("close dialoge");
+                        setState(() {
+                          _getAllForm = FormServices.getAllForm(role: 'employee');
+                        });
+                      });
                     }
                   },
                   child: const Text(
@@ -216,6 +216,74 @@ class _AnalysisCardWidgetState extends State<AnalysisCardWidget> {
         ],
       ),
     );
-
   }
+  Widget _buildPopupDialog(String formId, Map<String, dynamic> score) {
+    return AlertDialog(
+      title: Center(
+        child: Column(
+          children: const [
+            Text(
+              'Records',
+              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+            ),
+            Divider()
+          ],
+        ),
+      ),
+      content: Container(
+        height: MediaQuery.of(context).size.height * 0.3,
+        width: MediaQuery.of(context).size.width * 0.2,
+        child: SingleChildScrollView(
+          child: Column(
+            children: score.entries
+                .map((e) => SizedBox(
+              height: 40,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    e.key,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w700, fontSize: 20),
+                  ),
+                  Text(
+                    e.value,
+                    style:const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.w600),
+                  ),
+                ],
+              ),
+            ))
+                .toList(),
+          ),
+        ),
+      ),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text('Close'),
+        ),
+        TextButton(
+          onPressed: () async {
+            if (await FormServices.updateForm(
+                formId: formId, isVerified: true)) {
+              Navigator.pop(context);
+            } else {
+              Navigator.pop(context);
+            }
+          },
+          child: const Text('Verified'),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text('Reject'),
+        ),
+      ],
+    );
+  }
+
 }

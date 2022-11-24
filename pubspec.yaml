@@ -42,6 +42,7 @@ dependencies:
   flutter_bloc: ^8.1.1
   shared_preferences: ^2.0.15
   syncfusion_flutter_charts: ^20.1.59
+  go_router: ^5.2.0
 
 dev_dependencies:
   flutter_test:

@@ -18,7 +18,7 @@ class Dashboard extends StatelessWidget {
               for(var i in snapshot.data!['data']){
                 formList.add(i as Map);
               }
-              if(formList.isNotEmpty&&formList.last['isVerified'] == true) {
+              if(formList.isNotEmpty && formList.last['isVerified']=='true') {
                 return DashboardWidget(formData: formList.last,);
               }else{
                 return const Text('It is in progress');

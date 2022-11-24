@@ -102,14 +102,29 @@ class FormServices {
     }
   }
 
-
   static Future<Map<String, dynamic>> getAllForm({required String role}) async {
     try {
-      Response response = await dio().get(
-        '${Apis.baseUrl}${Apis.getAllForm}',queryParameters: {'role':role});
+      Response response = await dio().get('${Apis.baseUrl}${Apis.getAllForm}',
+          queryParameters: {'role': role});
       return response.data;
     } catch (error) {
       rethrow;
+    }
+  }
+
+  static Future<bool> updateForm(
+      {required String formId, required bool isVerified}) async {
+    try {
+      Response response = await dio()
+          .put('${Apis.baseUrl}${Apis.updateForm}', queryParameters: {
+        "formId": formId,
+        "isVerified": isVerified,
+      });
+      flutterToast(response.data['msg']);
+      return response.data['status'];
+    } catch (error) {
+      flutterToast(error.toString());
+      return false;
     }
   }
 }

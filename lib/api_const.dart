@@ -8,4 +8,5 @@ class Apis{
   static String saveForm = 'form/saveform';
   static String getUsers = 'auth/selecteduser';
   static String getAllForm = 'form/getallform';
+  static String updateForm = 'form/updateform';
 }
