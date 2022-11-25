@@ -27,6 +27,7 @@ class _UserListWidgetState extends State<UserListWidget> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<UserModel>>(
+      initialData: _userList,
         future: getEmployee,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
@@ -52,7 +53,6 @@ class _UserListWidgetState extends State<UserListWidget> {
                               ViewDashboard(userId: _userList[index].id!,),
                         ),
                       );
-                      print("ks");
                     },
                     child: UserCardWidget(
                       employeeName: _userList[index].name!,

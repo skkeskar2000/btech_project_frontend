@@ -2,30 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:major_project_fronted/constant/utils.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-class BarChartWidget extends StatefulWidget {
+class BarChartWidget extends StatelessWidget {
   const BarChartWidget({Key? key, required this.scoreData}) : super(key: key);
-  final Map<String, dynamic> scoreData;
-
+  final Map<String,dynamic>scoreData;
   @override
-  State<BarChartWidget> createState() => _BarChartWidgetState();
-}
-
-class _BarChartWidgetState extends State<BarChartWidget> {
-  late List<_ChartData> data;
-  late TooltipBehavior _tooltip;
-
-  @override
-  void initState() {
-    data = widget.scoreData.entries.map((entry) {
+  Widget build(BuildContext context) {
+    late List<_ChartData> data;
+    late TooltipBehavior _tooltip;
+    data = scoreData.entries.map((entry) {
       var w = _ChartData(entry.key.toString(), double.parse(entry.value));
       return w;
     }).toList();
     _tooltip = TooltipBehavior(enable: true);
-    super.initState();
-  }
 
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       body: SfCartesianChart(
         title: ChartTitle(
@@ -53,6 +42,7 @@ class _BarChartWidgetState extends State<BarChartWidget> {
     );
   }
 }
+
 
 class _ChartData {
   _ChartData(this.x, this.y);

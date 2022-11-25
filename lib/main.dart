@@ -1,10 +1,11 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:major_project_fronted/constant/app_route.dart';
-import 'package:major_project_fronted/constant/utils.dart';
 import 'package:major_project_fronted/preferences.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:url_strategy/url_strategy.dart';
 
 void main() {
+  setPathUrlStrategy();
   runApp(const MyApp());
 }
 

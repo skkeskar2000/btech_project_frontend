@@ -1,62 +1,128 @@
 import 'package:flutter/material.dart';
 import 'package:major_project_fronted/view/widget/bar_chart_widget.dart';
+import 'package:major_project_fronted/view/widget/dashboard_widget.dart';
 import 'package:major_project_fronted/view/widget/pie_chart_widget.dart';
 
+class ListItem {
+  int value;
+  String name;
+  ListItem(this.value, this.name);
+}
+
 class DashboardWidget extends StatefulWidget {
-  const DashboardWidget(
-      {Key? key, required, required this.formData })
+  const DashboardWidget({Key? key, required, required this.formData})
       : super(key: key);
-  final Map<dynamic,dynamic> formData;
+
+  final List<Map<dynamic, dynamic>> formData;
 
   @override
   State<DashboardWidget> createState() => _DashboardWidgetState();
 }
 
 class _DashboardWidgetState extends State<DashboardWidget> {
-  Map<String,dynamic> score = {};
+  Map<String, dynamic> score = {};
   String userName = '';
   int total = 0;
+  int length = 0;
+  int index = 0;
+  final List<ListItem> _dropdownItems = [
+    ListItem(0, (DateTime.now().year-0000).toString()),
+    ListItem(1, (DateTime.now().year-0001).toString()),
+    ListItem(2, (DateTime.now().year-0002).toString()),
+    ListItem(3, (DateTime.now().year-0003).toString()),
+  ];
+
+  late List<DropdownMenuItem<ListItem>> _dropdownMenuItems;
+  late ListItem _selectedItem;
+
   @override
   void initState() {
-    widget.formData.forEach((key, value) {
-      if(key=='_id' || key == 'createdAt' || key == 'updatedAt' || key == 'isVerified' || key=='__v' || key == 'role' || key=='userId'){
+    length=widget.formData.length-1;
+    _dropdownMenuItems = buildDropDownMenuItems(_dropdownItems);
+    _selectedItem = _dropdownMenuItems[0].value!;
+    super.initState();
+  }
 
-      }else if(key == 'userName'){
+  List<DropdownMenuItem<ListItem>> buildDropDownMenuItems(List listItems) {
+    List<DropdownMenuItem<ListItem>> items = [];
+
+    for(int i=0;i<=length;i++){
+      items.add(
+        DropdownMenuItem(
+          value: listItems[i],
+          child: Text(listItems[i].name),
+        ),
+      );
+    }
+    return items;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    widget.formData[length-index].forEach((key, value) {
+      if (key == '_id' ||
+          key == 'createdAt' ||
+          key == 'updatedAt' ||
+          key == 'isVerified' ||
+          key == '__v' ||
+          key == 'role' ||
+          key == 'userId') {
+      } else if (key == 'userName') {
         userName = value;
-      }else if(key == 'total'){
+      } else if (key == 'total') {
         total = int.parse(value);
-      }
-      else{
+      } else {
         score[key] = value;
       }
     });
-    super.initState();
-  }
-  @override
-  Widget build(BuildContext context) {
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              margin: const EdgeInsets.all(8),
-              width: 200,
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 5,
-                      spreadRadius: 1,
-                    ),
-                  ]),
-              child: ListTile(
-                minLeadingWidth: 0,
-                leading: const Icon(Icons.person_pin),
-                title: Text(userName),
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  margin: const EdgeInsets.all(8),
+                  width: 200,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 5,
+                          spreadRadius: 1,
+                        ),
+                      ]),
+                  child: ListTile(
+                    minLeadingWidth: 0,
+                    leading: const Icon(Icons.person_pin),
+                    title: Text(userName),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(right: 30),
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: Colors.grey)
+                  ),
+                  child: DropdownButton<ListItem>(
+                      value: _selectedItem,
+                      items: _dropdownMenuItems,
+                      underline: const SizedBox(),
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedItem = value!;
+                          index = value!.value;
+                        });
+                      }),
+                ),
+              ],
             ),
             Row(
               children: [
@@ -92,21 +158,21 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                           ),
                           Column(
                               children: score.entries.map((entry) {
-                                var w = Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 13, horizontal: 3),
-                                  child: Row(
-                                    mainAxisAlignment:
+                            var w = Container(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 13, horizontal: 3),
+                              child: Row(
+                                mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(entry.key),
-                                      Text((int.parse(entry.value)*10).toString()),
-                                    ],
-                                  ),
-                                );
-                                return w;
-                              }).toList()
-                          ),
+                                children: [
+                                  Text(entry.key),
+                                  Text(
+                                      (int.parse(entry.value) * 10).toString()),
+                                ],
+                              ),
+                            );
+                            return w;
+                          }).toList()),
                           const Divider(
                             color: Colors.black,
                           ),
@@ -114,8 +180,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                             padding: const EdgeInsets.symmetric(
                                 vertical: 13, horizontal: 3),
                             child: Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 const Text(
                                   'Percentage',
@@ -125,7 +190,8 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                   ),
                                 ),
                                 Text(
-                                  ((total/(score.length*10))*100).toString(),
+                                  ((total / (score.length * 10)) * 100)
+                                      .toString(),
                                   style: const TextStyle(
                                     fontSize: 25,
                                     fontWeight: FontWeight.w700,
@@ -144,10 +210,11 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                       children: [
                         Container(
                           height: 320,
-                          margin: const EdgeInsets.symmetric(horizontal: 10,vertical: 4),
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 4),
                           padding: const EdgeInsets.symmetric(horizontal: 30),
                           decoration: BoxDecoration(
-                            border: Border.all(width: 1,color: Colors.black12),
+                            border: Border.all(width: 1, color: Colors.black12),
                           ),
                           child: BarChartWidget(
                             scoreData: score,
@@ -155,9 +222,10 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                         ),
                         Container(
                           height: 280,
-                          margin: const EdgeInsets.symmetric(horizontal: 10,vertical: 4),
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 4),
                           decoration: BoxDecoration(
-                            border: Border.all(width: 1,color: Colors.black12),
+                            border: Border.all(width: 1, color: Colors.black12),
                           ),
                           child: PieChartWidget(
                             formData: score,

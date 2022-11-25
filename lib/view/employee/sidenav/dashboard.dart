@@ -8,7 +8,7 @@ class Dashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Map<dynamic, dynamic>> formList = [];
-    return Container(
+    return SizedBox(
       width: MediaQuery.of(context).size.width,
       child: FutureBuilder<Map<String,dynamic>>(
         future: FormServices.getForm(userId: userId),
@@ -19,7 +19,7 @@ class Dashboard extends StatelessWidget {
                 formList.add(i as Map);
               }
               if(formList.isNotEmpty && formList.last['isVerified']=='true') {
-                return DashboardWidget(formData: formList.last,);
+                return DashboardWidget(formData: formList,);
               }else{
                 return const Text('It is in progress');
               }

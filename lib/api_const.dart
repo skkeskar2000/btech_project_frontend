@@ -1,6 +1,6 @@
 
 class Apis{
-  static String baseUrl = 'http://localhost:5000/';
+  static String baseUrl = 'https://btech-project-server.onrender.com/';
   static String signIn = 'auth/login';
   static String getCustomAttribute = 'admin/getcustomform';
   static String createForm = 'admin/createform';

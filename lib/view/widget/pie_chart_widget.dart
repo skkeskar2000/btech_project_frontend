@@ -2,33 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:major_project_fronted/constant/utils.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-
-class PieChartWidget extends StatefulWidget {
-  const PieChartWidget({Key? key, required this.formData,}) : super(key: key);
-  final Map<String,dynamic> formData;
-  @override
-  State<PieChartWidget> createState() => _PieChartWidgetState();
-}
-
-class _PieChartWidgetState extends State<PieChartWidget> {
-
-  late TooltipBehavior _tooltipBehavior;
-
-  @override
-  void initState(){
-    _tooltipBehavior = TooltipBehavior(enable: true);
-    super.initState();
-  }
-
+class PieChartWidget extends StatelessWidget {
+  const PieChartWidget({Key? key, required this.formData}) : super(key: key);
+  final Map<String,dynamic>formData;
   @override
   Widget build(BuildContext context) {
+    TooltipBehavior _tooltipBehavior = TooltipBehavior(enable: true);
     late TooltipBehavior _tooltip;
-
     num data = 0;
-    widget.formData.forEach((key, value) {
+    formData.forEach((key, value) {
       data+= int.parse(value);
     });
-    var average = data / widget.formData.length;
+    var average = data / formData.length;
     print(data);
     print(average);
     final List<ChartData> chartData = [
@@ -49,20 +34,21 @@ class _PieChartWidgetState extends State<PieChartWidget> {
         ),
         tooltipBehavior: _tooltipBehavior,
         series: <CircularSeries>[
-      // Render pie chart
-      PieSeries<ChartData, String>(
-        dataSource: chartData,
-        enableTooltip: true,
-        pointColorMapper: (ChartData data, _) => data.color,
-        xValueMapper: (ChartData data, _) => data.x,
-        yValueMapper: (ChartData data, _) => data.y,
-        dataLabelSettings: const DataLabelSettings(
-            // Renders the data label
-            isVisible: true),
-      ),
-    ]);
+          // Render pie chart
+          PieSeries<ChartData, String>(
+            dataSource: chartData,
+            enableTooltip: true,
+            pointColorMapper: (ChartData data, _) => data.color,
+            xValueMapper: (ChartData data, _) => data.x,
+            yValueMapper: (ChartData data, _) => data.y,
+            dataLabelSettings: const DataLabelSettings(
+              // Renders the data label
+                isVisible: true),
+          ),
+        ]);
   }
 }
+
 
 class ChartData {
   ChartData(this.x, this.y, this.color);

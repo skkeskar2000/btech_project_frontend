@@ -81,8 +81,10 @@ class SignInScreen extends StatelessWidget {
         else if(response.msg == "employee"){
           Navigator.popAndPushNamed(context, AppConst.employeeHome);
         }
-        else {
+        else if(response.msg == 'manager'){
           Navigator.pushNamed(context, AppConst.managerHome);
+        }else{
+          flutterToast(response.msg);
         }
       }else{
         print('error');

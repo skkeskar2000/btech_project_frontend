@@ -46,7 +46,6 @@ class FormServices {
       formData.forEach((key, value) {
         total += int.parse(value);
       });
-      print(userId);
       formData['total'] = total.toString();
       formData['userId'] = userId;
       formData['role'] = role;
