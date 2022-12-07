@@ -7,7 +7,7 @@ void flutterToast(String msg){
     msg,
     duration: Duration(seconds: 2),
     position: ToastPosition.bottom,
-    backgroundColor: Colors.black.withOpacity(0.8),
+    backgroundColor: Colors.greenAccent.withOpacity(0.8),
     radius: 13.0,
     textStyle: TextStyle(fontSize: 18.0),
   );

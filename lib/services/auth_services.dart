@@ -53,7 +53,16 @@ class AuthServices {
         flutterToast(response.data['msg']);
         return [];
       }
-    }catch(error){
+    } on DioError catch (error){
+      rethrow;
+    }
+  }
+
+  static Future<dynamic>addUser(dynamic data)async{
+    try{
+      dynamic response = dio().post(Apis.baseUrl+Apis.addUser,data: data);
+      return response;
+    } on DioError catch (error) {
       rethrow;
     }
   }

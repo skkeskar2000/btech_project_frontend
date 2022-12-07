@@ -17,8 +17,8 @@ class PieChartWidget extends StatelessWidget {
     print(data);
     print(average);
     final List<ChartData> chartData = [
-      ChartData('Need Progress', (10 - average)*10, Colors.red),
-      ChartData('Your Average', average*10, Colors.blue),
+      ChartData('Need Progress', double.parse(((10 - average)*10).toStringAsFixed(2)), Colors.red),
+      ChartData('Your Average', double.parse((average*10).toStringAsFixed(2)), Colors.blue),
     ];
     return SfCircularChart(
         title: ChartTitle(

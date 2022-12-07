@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:major_project_fronted/constant/app_route.dart';
 import 'package:major_project_fronted/constant/toast.dart';
 import 'package:major_project_fronted/constant/utils.dart';
-import 'package:major_project_fronted/services/user_list_widget';
+import 'package:major_project_fronted/services/auth_services.dart';
 import 'package:major_project_fronted/services/service_const.dart';
 
 class SignInScreen extends StatelessWidget {
@@ -73,7 +73,9 @@ class SignInScreen extends StatelessWidget {
 
   void _signIn(String email,String password,BuildContext context) async{
     try{
-      Tuple response = await AuthServices.signIn(email, password);
+      showLoading(context);
+      Tuple response = await  AuthServices.signIn(email, password);
+      hideLoading(context);
       if(response.status){
         if(response.msg == 'ceo'){
           Navigator.popAndPushNamed(context, AppConst.ceoHome);
@@ -91,6 +93,7 @@ class SignInScreen extends StatelessWidget {
         flutterToast("error");
       }
     }catch(error){
+      hideLoading(context);
       flutterToast(error.toString());
     }
   }

@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
     SharedPreferenceHelper.init();
     return OKToast(
       child: FluentApp(
-        title: 'Flutter Demo',
+        title: 'Project',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           scaffoldBackgroundColor: Colors.white,

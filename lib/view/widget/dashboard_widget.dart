@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:major_project_fronted/view/widget/bar_chart_widget.dart';
 import 'package:major_project_fronted/view/widget/dashboard_widget.dart';
 import 'package:major_project_fronted/view/widget/pie_chart_widget.dart';
+import 'package:major_project_fronted/view/widget/responsive_widget.dart';
 
 class ListItem {
   int value;
   String name;
+
   ListItem(this.value, this.name);
 }
 
@@ -26,10 +28,10 @@ class _DashboardWidgetState extends State<DashboardWidget> {
   int length = 0;
   int index = 0;
   final List<ListItem> _dropdownItems = [
-    ListItem(0, (DateTime.now().year-0000).toString()),
-    ListItem(1, (DateTime.now().year-0001).toString()),
-    ListItem(2, (DateTime.now().year-0002).toString()),
-    ListItem(3, (DateTime.now().year-0003).toString()),
+    ListItem(0, (DateTime.now().year - 0000).toString()),
+    ListItem(1, (DateTime.now().year - 0001).toString()),
+    ListItem(2, (DateTime.now().year - 0002).toString()),
+    ListItem(3, (DateTime.now().year - 0003).toString()),
   ];
 
   late List<DropdownMenuItem<ListItem>> _dropdownMenuItems;
@@ -37,7 +39,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
 
   @override
   void initState() {
-    length=widget.formData.length-1;
+    length = widget.formData.length - 1;
     _dropdownMenuItems = buildDropDownMenuItems(_dropdownItems);
     _selectedItem = _dropdownMenuItems[0].value!;
     super.initState();
@@ -46,7 +48,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
   List<DropdownMenuItem<ListItem>> buildDropDownMenuItems(List listItems) {
     List<DropdownMenuItem<ListItem>> items = [];
 
-    for(int i=0;i<=length;i++){
+    for (int i = 0; i <= length; i++) {
       items.add(
         DropdownMenuItem(
           value: listItems[i],
@@ -59,7 +61,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
 
   @override
   Widget build(BuildContext context) {
-    widget.formData[length-index].forEach((key, value) {
+    widget.formData[length - index].forEach((key, value) {
       if (key == '_id' ||
           key == 'createdAt' ||
           key == 'updatedAt' ||
@@ -109,8 +111,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: Colors.grey)
-                  ),
+                      border: Border.all(color: Colors.grey)),
                   child: DropdownButton<ListItem>(
                       value: _selectedItem,
                       items: _dropdownMenuItems,
@@ -124,116 +125,341 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                 ),
               ],
             ),
-            Row(
-              children: [
-                Expanded(
-                    flex: 1,
-                    child: Container(
-                      alignment: Alignment.topCenter,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 20, horizontal: 5),
-                      margin: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Colors.black12,
-                              blurRadius: 10,
-                              spreadRadius: 1,
+            ResponsiveWidget(
+              mobile: Column(
+                children: [
+                  Container(
+                    alignment: Alignment.topCenter,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 20, horizontal: 5),
+                    margin: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 10,
+                            spreadRadius: 1,
+                          ),
+                        ]),
+                    child: Column(
+                      children: [
+                        const Text(
+                          'RESULT',
+                          style: TextStyle(
+                              fontSize: 30, fontWeight: FontWeight.w700),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        const Divider(
+                          color: Colors.black,
+                        ),
+                        Column(
+                            children: score.entries.map((entry) {
+                          var w = Container(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 13, horizontal: 3),
+                            child: Row(
+                              mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(entry.key),
+                                Text((int.parse(entry.value) * 10)
+                                    .toString()),
+                              ],
                             ),
-                          ]),
-                      child: Column(
-                        children: [
-                          const Text(
-                            'RESULT',
-                            style: TextStyle(
-                                fontSize: 30, fontWeight: FontWeight.w700),
+                          );
+                          return w;
+                        }).toList()),
+                        const Divider(
+                          color: Colors.black,
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 13, horizontal: 3),
+                          child: Row(
+                            mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                'Percentage',
+                                style: TextStyle(
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              Text(
+                                ((total / (score.length * 10)) * 100)
+                                    .toStringAsFixed(2),
+                                style: const TextStyle(
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          const Divider(
-                            color: Colors.black,
-                          ),
-                          Column(
-                              children: score.entries.map((entry) {
-                            var w = Container(
+                        ),
+                      ],
+                    ),
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Container(
+                        height: 320,
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 4),
+                        padding: const EdgeInsets.symmetric(horizontal: 30),
+                        decoration: BoxDecoration(
+                          border:
+                              Border.all(width: 1, color: Colors.black12),
+                        ),
+                        child: BarChartWidget(
+                          scoreData: score,
+                        ),
+                      ),
+                      Container(
+                        height: 280,
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 4),
+                        decoration: BoxDecoration(
+                          border:
+                              Border.all(width: 1, color: Colors.black12),
+                        ),
+                        child: PieChartWidget(
+                          formData: score,
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+              web: Row(
+                children: [
+                  Expanded(
+                      flex: 1,
+                      child: Container(
+                        alignment: Alignment.topCenter,
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 20, horizontal: 5),
+                        margin: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 10,
+                                spreadRadius: 1,
+                              ),
+                            ]),
+                        child: Column(
+                          children: [
+                            const Text(
+                              'RESULT',
+                              style: TextStyle(
+                                  fontSize: 30, fontWeight: FontWeight.w700),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            const Divider(
+                              color: Colors.black,
+                            ),
+                            Column(
+                                children: score.entries.map((entry) {
+                              var w = Container(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 13, horizontal: 3),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(entry.key),
+                                    Text((int.parse(entry.value) * 10)
+                                        .toStringAsFixed(2)),
+                                  ],
+                                ),
+                              );
+                              return w;
+                            }).toList()),
+                            const Divider(
+                              color: Colors.black,
+                            ),
+                            Container(
                               padding: const EdgeInsets.symmetric(
                                   vertical: 13, horizontal: 3),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(entry.key),
+                                  const Text(
+                                    'Percentage',
+                                    style: TextStyle(
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
                                   Text(
-                                      (int.parse(entry.value) * 10).toString()),
+                                    ((total / (score.length * 10)) * 100)
+                                        .toString(),
+                                    style: const TextStyle(
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
                                 ],
                               ),
-                            );
-                            return w;
-                          }).toList()),
-                          const Divider(
-                            color: Colors.black,
-                          ),
+                            ),
+                          ],
+                        ),
+                      )),
+                  Expanded(
+                      flex: 1,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
                           Container(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 13, horizontal: 3),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  'Percentage',
-                                  style: TextStyle(
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                                Text(
-                                  ((total / (score.length * 10)) * 100)
-                                      .toString(),
-                                  style: const TextStyle(
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                              ],
+                            height: 320,
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 4),
+                            padding: const EdgeInsets.symmetric(horizontal: 30),
+                            decoration: BoxDecoration(
+                              border:
+                                  Border.all(width: 1, color: Colors.black12),
+                            ),
+                            child: BarChartWidget(
+                              scoreData: score,
                             ),
                           ),
+                          Container(
+                            height: 280,
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 4),
+                            decoration: BoxDecoration(
+                              border:
+                                  Border.all(width: 1, color: Colors.black12),
+                            ),
+                            child: PieChartWidget(
+                              formData: score,
+                            ),
+                          )
                         ],
-                      ),
-                    )),
-                Expanded(
-                    flex: 1,
+                      )),
+                ],
+              ),
+              tab:  Column(
+                children: [
+                  Container(
+                    alignment: Alignment.topCenter,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 20, horizontal: 5),
+                    margin: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 10,
+                            spreadRadius: 1,
+                          ),
+                        ]),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Container(
-                          height: 320,
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 4),
-                          padding: const EdgeInsets.symmetric(horizontal: 30),
-                          decoration: BoxDecoration(
-                            border: Border.all(width: 1, color: Colors.black12),
-                          ),
-                          child: BarChartWidget(
-                            scoreData: score,
-                          ),
+                        const Text(
+                          'RESULT',
+                          style: TextStyle(
+                              fontSize: 30, fontWeight: FontWeight.w700),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        const Divider(
+                          color: Colors.black,
+                        ),
+                        Column(
+                            children: score.entries.map((entry) {
+                              var w = Container(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 13, horizontal: 3),
+                                child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(entry.key),
+                                    Text((int.parse(entry.value) * 10)
+                                        .toString()),
+                                  ],
+                                ),
+                              );
+                              return w;
+                            }).toList()),
+                        const Divider(
+                          color: Colors.black,
                         ),
                         Container(
-                          height: 280,
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 4),
-                          decoration: BoxDecoration(
-                            border: Border.all(width: 1, color: Colors.black12),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 13, horizontal: 3),
+                          child: Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                'Percentage',
+                                style: TextStyle(
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              Text(
+                                ((total / (score.length * 10)) * 100)
+                                    .toStringAsFixed(2),
+                                style: const TextStyle(
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
                           ),
-                          child: PieChartWidget(
-                            formData: score,
-                          ),
-                        )
+                        ),
                       ],
-                    )),
-              ],
+                    ),
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Container(
+                        height: 320,
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 4),
+                        padding: const EdgeInsets.symmetric(horizontal: 30),
+                        decoration: BoxDecoration(
+                          border:
+                          Border.all(width: 1, color: Colors.black12),
+                        ),
+                        child: BarChartWidget(
+                          scoreData: score,
+                        ),
+                      ),
+                      Container(
+                        height: 280,
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 4),
+                        decoration: BoxDecoration(
+                          border:
+                          Border.all(width: 1, color: Colors.black12),
+                        ),
+                        child: PieChartWidget(
+                          formData: score,
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
             ),
           ],
         ),

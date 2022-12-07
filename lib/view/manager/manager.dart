@@ -6,7 +6,7 @@ import 'package:major_project_fronted/view/ceo/user_list_widget.dart';
 import 'package:major_project_fronted/view/employee/sidenav/dashboard.dart';
 import 'package:major_project_fronted/view/employee/sidenav/fillForm.dart';
 import 'package:major_project_fronted/view/manager/sidenav/analysis.dart';
-
+import 'package:major_project_fronted/view/widget/add_user_widget.dart';
 class ManagerHome extends StatefulWidget {
   const ManagerHome({Key? key}) : super(key: key);
 
@@ -106,6 +106,21 @@ class _ManagerHomeState extends State<ManagerHome> {
                 ),
                 content: ma.Material(
                   child: Analysis(),
+                ),
+              ),
+            ),
+            PaneItem(
+              icon: const Icon(FluentIcons.add_friend),
+              title: const Text("Add Employee"),
+              body: ScaffoldPage(
+                header: Center(
+                  child: Text(
+                    'Add Employee',
+                    style: TextStyle(fontSize: 40,color: headingTextColor),
+                  ),
+                ),
+                content: const ma.Material(
+                  child: AddUserWidget(type: 'employee',),
                 ),
               ),
             ),
