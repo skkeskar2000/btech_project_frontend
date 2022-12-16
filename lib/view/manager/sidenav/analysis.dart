@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:major_project_fronted/constant/toast.dart';
 import 'package:major_project_fronted/services/form_services.dart';
 import 'package:major_project_fronted/services/service_const.dart';
+import 'package:major_project_fronted/view/widget/dropdown_widget.dart';
 
 class Analysis extends StatefulWidget {
   const Analysis({Key? key}) : super(key: key);
@@ -110,6 +111,7 @@ class _AnalysisState extends State<Analysis> {
     String userName = '';
     int total = 0;
     String formId = '';
+    String userId = '';
     bool isVerified = false;
     Map<String, dynamic> score = {};
 
@@ -117,8 +119,9 @@ class _AnalysisState extends State<Analysis> {
         if (key == 'createdAt' ||
             key == 'updatedAt' ||
             key == '__v' ||
-            key == 'role' ||
-            key == 'userId') {
+            key == 'role' ) {
+        }else if(key == 'userId'){
+          userId = value;
         } else if (key == 'userName') {
           userName = value;
         } else if (key == 'total') {
@@ -190,7 +193,7 @@ class _AnalysisState extends State<Analysis> {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) =>
-                            _buildPopupDialog(formId, score),
+                            _buildPopupDialog(formId, score,userId,userName),
                       ).then((value) {
                         print("close dialoge");
                         setState(() {
@@ -217,7 +220,7 @@ class _AnalysisState extends State<Analysis> {
       ),
     );
   }
-  Widget _buildPopupDialog(String formId, Map<String, dynamic> score) {
+  Widget _buildPopupDialog(String formId, Map<String, dynamic> score,userId,name) {
     return AlertDialog(
       title: Center(
         child: Column(
@@ -274,16 +277,87 @@ class _AnalysisState extends State<Analysis> {
               Navigator.pop(context);
             }
           },
-          child: const Text('Verified'),
+          child: const Text('Verify'),
         ),
         TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
+          onPressed: () async{
+            showDialog(
+              context: context,
+              builder: (BuildContext context) =>
+                  _buildFormUpdateDialog(formId, score,userId,name),
+            ).then((value) {
+              setState(() {
+                _getAllForm = FormServices.getAllForm(role: 'employee');
+              });
+            });
           },
-          child: const Text('Reject'),
+          child: const Text('Update'),
         ),
       ],
     );
   }
 
+  Widget _buildFormUpdateDialog(String formId, Map<String, dynamic> score,userId,name) {
+    List<String> items = ['1', '2', '3', '4', '5','6','7','8','9','10'];
+    return AlertDialog(
+      title: Center(
+        child: Column(
+          children: const [
+            Text(
+              'Records',
+              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+            ),
+            Divider()
+          ],
+        ),
+      ),
+      content: Column(
+          children: score.entries.map((entry) {
+            return DropDownButtonWidget(items: items, onChanged: (value){
+              score[entry.key] = value;
+            }, questionTitle: entry.key);
+          }).toList()),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text('Close'),
+        ),
+        TextButton(
+          onPressed: () async {
+            if (await updateForm(formId, score,userId,name)) {
+              Navigator.pop(context);
+            } else {
+              Navigator.pop(context);
+            }
+            Navigator.pop(context);
+          },
+          child: const Text('Update Form'),
+        ),
+      ],
+    );
+  }
+
+}
+
+
+
+Future<bool> updateForm(String formId, Map<String, dynamic> score ,userId,name)async{
+  try{
+    if(await FormServices.deleteForm(formId: formId)){
+      if (await FormServices.saveForm(formData: score,formUserId: userId,formUserName: name,formUserRole: 'employee')) {
+        flutterToast('Successfully Updated');
+        return true;
+      } else {
+        flutterToast('Unable to Submitted');
+        return false;
+      }
+    }else{
+      return false;
+    }
+  }catch(error){
+    print(error);
+    return false;
+  }
 }

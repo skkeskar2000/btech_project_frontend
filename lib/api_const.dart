@@ -11,5 +11,6 @@ class Apis{
   static String saveForm = 'form/saveform';
   static String getUsers = 'auth/selecteduser';
   static String getAllForm = 'form/getallform';
-  static String updateForm = 'form/updateform';
+  static String verifyForm = 'form/varifyform';
+  static String deleteForm = 'form/deleteForm';
 }

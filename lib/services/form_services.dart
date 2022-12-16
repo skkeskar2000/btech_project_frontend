@@ -36,11 +36,19 @@ class FormServices {
     }
   }
 
-  static Future<bool> saveForm(Map<String, dynamic> formData) async {
+  static Future<bool> saveForm({
+    required Map<String, dynamic> formData,
+    String? formUserId,
+    String? formUserName,
+    String? formUserRole,
+  }) async {
     try {
-      String? userId = SharedPreferenceHelper.getString(Preferences.userid);
-      String? name = SharedPreferenceHelper.getString(Preferences.name);
-      String? role = SharedPreferenceHelper.getString(Preferences.role);
+      String? userId =
+          formUserId ?? SharedPreferenceHelper.getString(Preferences.userid);
+      String? name =
+          formUserName ?? SharedPreferenceHelper.getString(Preferences.name);
+      String? role =
+          formUserRole ?? SharedPreferenceHelper.getString(Preferences.role);
 
       int total = 0;
       formData.forEach((key, value) {
@@ -115,13 +123,27 @@ class FormServices {
       {required String formId, required bool isVerified}) async {
     try {
       Response response = await dio()
-          .put('${Apis.baseUrl}${Apis.updateForm}', queryParameters: {
+          .put('${Apis.baseUrl}${Apis.verifyForm}', queryParameters: {
         "formId": formId,
         "isVerified": isVerified,
       });
       flutterToast(response.data['msg']);
       return response.data['status'];
     } catch (error) {
+      flutterToast(error.toString());
+      return false;
+    }
+  }
+
+  static Future<bool> deleteForm({required String formId}) async {
+    try {
+      Response response = await dio()
+          .delete('${Apis.baseUrl}${Apis.deleteForm}', queryParameters: {
+        "formId": formId,
+      });
+      return response.data['status'];
+    } on DioError catch (error) {
+      print(error);
       flutterToast(error.toString());
       return false;
     }
